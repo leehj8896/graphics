@@ -28,18 +28,28 @@ void init_shader_program();
 /// 렌더링 관련 변수 및 함수
 ////////////////////////////////////////////////////////////////////////////////
 // per-vertex 3D positions (x, y, z)
+// 반시계 방향이어야 함
 GLfloat g_position[] = {
   0.5f,  0.5f,  0.0f,          // 0th vertex position
   -0.5f, -0.5f,  0.0f,          // 1st vertex position
   0.5f, -0.5f,  0.0f,          // 2nd vertex position
+
+  0.5f,  0.5f,  0.0f,          // 0th vertex position
+  -0.5f, 0.5f,  0.0f,          // 1st vertex position
+  -0.5f, -0.5f,  0.0f,          // 2nd vertex position
 };
 
 // per-vertex RGB color (r, g, b)
 GLfloat g_color[] = {
   1.0f, 0.0f, 0.0f,             // 0th vertex color (red)
-  1.0f, 0.0f, 0.0f,             // 1st vertex color (red)
-  1.0f, 0.0f, 0.0f,             // 2nd vertex color (red)
+  0.0f, 1.0f, 0.0f,             // 1st vertex color (red)
+  0.0f, 0.0f, 1.0f,             // 2nd vertex color (red)
+
+  1.0f, 0.0f, 0.0f,             // 0th vertex color (red)
+  1.0f, 1.0f, 0.0f,             // 1st vertex color (red)
+  0.0f, 1.0f, 0.0f,             // 2nd vertex color (red)
 };
+//gpu로 아직 가지 않음
 
 void init_buffer_objects();     // VBO init 함수: GPU의 VBO를 초기화하는 함수.
 void render_object();           // rendering 함수: 물체(삼각형)를 렌더링하는 함수.
@@ -100,9 +110,11 @@ void init_buffer_objects()
   /// TODO: CPU 메모리에서 GPU 메모리로 물체의 데이터를 전송하는 부분 - BEGIN
   /////////////////////////////////////////////////////////////////////
   
-  glGenBuffers(1, &position_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, position_buffer);
+  glGenBuffers(1, &position_buffer);              //포지션버퍼 변수에 gpu메모리 버퍼 주소 가져옴
+  glBindBuffer(GL_ARRAY_BUFFER, position_buffer); //객체 지정
   glBufferData(GL_ARRAY_BUFFER, sizeof(g_position), g_position, GL_STATIC_DRAW);
+  //cpu 메모리의 데이터를 카피 >> gpu 메모리로. 버텍스 3개 정보(36바이트). 마지막은 옵션 
+  //한번 발생하는 작업
 
   glGenBuffers(1, &color_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, color_buffer);
@@ -139,7 +151,7 @@ void render_object()
   glVertexAttribPointer(loc_a_color, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
   // 삼각형 그리기
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
 
   // 정점 attribute 배열 비활성화
   glDisableVertexAttribArray(loc_a_position);
@@ -189,7 +201,7 @@ int main(void)
   while (!glfwWindowShouldClose(window))
   {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //항상 지운 다음 그려야 함
 
     // TODO: 물체(삼각형)를 렌더링하는 함수 호출
     render_object();
