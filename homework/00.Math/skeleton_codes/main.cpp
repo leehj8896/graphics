@@ -64,14 +64,16 @@ void dim_3x3_test()
   std::cout << "z = cross(x, y)" << std::endl;
   std::cout << "z = " << z << std::endl;
 
+
   
   A(0, 0) =  1;   A(0, 1) =  2;   A(0, 2) = -1;
   A(1, 0) =  2;   A(1, 1) =  1;   A(1, 2) =  0;
   A(2, 0) =  3;   A(2, 1) = -2;   A(2, 2) =  1;
 
+  
+  
   std::cout << "A = " << std::endl;
   std::cout << A;
-
   std::cout << "B = A^T" << std::endl;
   B = A.transpose();
   std::cout << "B = " << std::endl;
@@ -107,7 +109,7 @@ void dim_3x3_test()
   std::cout << "vector x to pointer casting" << std::endl;
   testing_vector_to_pointer_type_cast(x, 3);
   std::cout << "matrix A to pointer casting" << std::endl;
-  testing_matrix_to_pointer_type_cast(A, 3*3);
+  testing_matrix_to_pointer_type_cast(A, 3*3);  
 }
 
 void dim_4x4_test()
